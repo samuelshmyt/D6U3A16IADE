@@ -105,7 +105,20 @@ app.layout = dbc.Container(
     children=[
         dbc.Row([
                 dbc.Col([controllers], md=3),
-                dbc.Col([map, hist], md=9),
+                dbc.Col([
+                    dbc.Row([
+                        html.H4("Georeferência da Imobiliária BRAZILIAN HOUSES x Aluguéis", style={"margin-top": "20px", "margin-left": "50px","color": "#6B1527","font-size": "30px",}),
+                    ]),
+                    dbc.Row([
+                    dbc.Col([map],md=12),
+                    ],),
+                    dbc.Row([
+                    dbc.Col([
+                        html.H4("Distribuição dos preços por Menu", style={"margin-top": "10px", "margin-left": "50px","color": "#6B1527","font-size": "15px",})
+                        ,hist
+                        ],md=5),
+                    ],),                    
+                ], md=9),
                 ])
 
     ], fluid=True, )
@@ -133,7 +146,8 @@ def update_hist(local, square_size, color_map):
             margin=go.layout.Margin(l=10, r=0, t=0, b=50),
             showlegend=False,
             template="plotly",
-            paper_bgcolor="rgba(0,0,0,0)"
+            paper_bgcolor="rgba(0,0,0,0)",
+            title="Aluguel x Despesas Finais",
         )
         hist_fig.layout = hist_layout
 
@@ -148,7 +162,7 @@ def update_hist(local, square_size, color_map):
     map_fig.update_layout(mapbox=dict(center=go.layout.mapbox.Center(lat=mean_lat,lon=mean_long)),
         template="plotly",
         paper_bgcolor="rgba(0,0,0,0)",
-         margin=go.layout.Margin(l=10, r=10, t=10, b=10),
+        margin=go.layout.Margin(l=10, r=10, t=10, b=10),
     ) 
     return hist_fig, map_fig
 
