@@ -3,11 +3,12 @@ from dash import html, dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
-
 import plotly.express as px
+from plotly.subplots import make_subplots
 
 from _map import *
 from _histogram import *
+from _subgraf import *
 # APP ======================================================
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 server = app.server
@@ -18,19 +19,6 @@ server = app.server
 
 # Início do Dataset ==========================================
 df = pd.read_csv("dataset/MODIFICADOaleatorio.csv")
-
-#coordenadas_cidades = {
-#    'São Paulo': {'LAT': -23.5505, 'LONG': -46.6333},
-#    'Porto Alegre': {'LAT': -30.0346, 'LONG': -51.2177},
-#    'Rio de Janeiro': {'LAT': -22.9068, 'LONG': -43.1729},
-#    'Campinas': {'LAT': -22.9056, 'LONG': -47.0608},
-#    'Belo Horizonte': {'LAT': -19.9167, 'LONG': -43.9345},
-#}
-
-
-#df['LAT'] = df['CIDADE'].map(lambda cidade: coordenadas_cidades[cidade]['LAT'])
-#df['LONG'] = df['CIDADE'].map(
-#    lambda cidade: coordenadas_cidades[cidade]['LONG'])
 
 # Fim do Dataset ==========================================
 # CONTRPÇER =============================================
@@ -76,7 +64,7 @@ controllers = dbc.Row([
         id='slider-square-size',
         marks={i: str(j) for i, j in enumerate(slider_size)},
         step=None,
-        value=1,
+        value=2,
     ),
     html.H4("CIDADE:",
             style={"margin-top": "20px", "margin-bottom": "10px"}),
@@ -109,16 +97,18 @@ app.layout = dbc.Container(
                     dbc.Row([
                         html.H4("Georeferência da Imobiliária BRAZILIAN HOUSES x Aluguéis", style={"margin-top": "20px", "margin-left": "50px","color": "#6B1527","font-size": "30px",}),
                     ]),
-                    dbc.Row([
-                    dbc.Col([map],md=12),
+                    dbc.Row([dbc.Col([map],md=12),
                     ],),
                     dbc.Row([
                     dbc.Col([
                         html.H4("Distribuição dos preços por Menu", style={"margin-top": "10px", "margin-left": "50px","color": "#6B1527","font-size": "15px",})
                         ,hist
-                        ],md=5),
-                    ],),                    
+                        ],md=11),
+                    ],),
+                    dbc.Row([dbc.Col([subb],md=12),
+                    ],),                        
                 ], md=9),
+
                 ])
 
     ], fluid=True, )
@@ -129,7 +119,7 @@ app.layout = dbc.Container(
 
 
 @app.callback(
-    [Output('hist-graph', 'figure'),Output('map-graph', 'figure')],
+    [Output('hist-graph', 'figure'),Output('map-graph', 'figure'),Output('sub-graph', 'figure')],
     [Input('local-dropdown', 'value'),
      Input('slider-square-size', 'value'),
      Input('menu-dropdown', 'value')]
@@ -141,21 +131,23 @@ def update_hist(local, square_size, color_map):
         df_intermediate = df[df["CIDADE"] == local] if local != 'All' else df.copy()
         tamanho_limite = slider_size[square_size] if square_size is not None else df['DESPESA_TOTAL'].min()
         df_intermediate = df_intermediate[df_intermediate['DESPESA_TOTAL'] <= tamanho_limite]
-        hist_fig = px.histogram(df_intermediate, x=color_map, opacity=0.75)
-        hist_layout = go.Layout(
+    
+    # // HISTORIOGRAMA 
+    hist_fig = px.histogram(df_intermediate, x=color_map, opacity=0.75)
+    hist_layout = go.Layout(
             margin=go.layout.Margin(l=10, r=0, t=0, b=50),
             showlegend=False,
             template="plotly",
             paper_bgcolor="rgba(0,0,0,0)",
             title="Aluguel x Despesas Finais",
         )
-        hist_fig.layout = hist_layout
-
+    hist_fig.layout = hist_layout
+    
+    # // MAPA 
     mean_lat = df_intermediate["LAT"].mean()
     mean_long = df_intermediate["LONG"].mean()
 
     px.set_mapbox_access_token(open("keys/mapbox_key").read()) 
-    
     map_fig = px.scatter_mapbox(df_intermediate,lat="LAT",lon="LONG",
                                 color=color_map,
                                 size_max=50,zoom= 12 if local != 'All' else 4,opacity=0.4)  
@@ -164,7 +156,129 @@ def update_hist(local, square_size, color_map):
         paper_bgcolor="rgba(0,0,0,0)",
         margin=go.layout.Margin(l=10, r=10, t=10, b=10),
     ) 
-    return hist_fig, map_fig
+
+    # // SUBPLOT
+    coluna_quantitativa = ['AREA', 'QUARTOS', 'BANHEIRO', 'ESTACIONAMENTO', 'PISO', 'TAXA', 'ALUGUEL', 'IPTU', 'SEGURO']
+    coluna_qualitativa = ['ANIMAL', 'MOBILIA']
+    frequencia = [499.0, 2061.75, 3581.5, 6768.0, 1120000.0]
+    coluna = color_map
+    square_size = square_size
+
+    if coluna in coluna_qualitativa:
+
+        df_intermediate['CATEGORIA_DESPESA'] = pd.cut(df_intermediate['DESPESA_TOTAL'], bins=frequencia, labels=[f'{frequencia[i]} - {frequencia[i+1]}' for i in range(len(frequencia)-1)])
+        df_agrupado = df_intermediate.groupby(['CATEGORIA_DESPESA', coluna], observed=False).size().reset_index(name='CONTAGEM')
+        valorX = df_agrupado.CATEGORIA_DESPESA
+        valorY = df_agrupado.CONTAGEM
+
+        print(f'A coluna {coluna} é qualitativa.')
+
+        sub_fig = make_subplots(rows=4, cols=1, specs=[[{'type': 'xy'}], [{'type': 'xy'}], [{'type': 'xy'}], [{'type': 'domain'}]])
+
+        bar_fig = px.bar(df_agrupado,x=valorX,y=valorY,color=coluna, barmode='group', text_auto=True)
+        line_fig = px.line(df_agrupado,x= valorX,y= valorY,color=coluna,markers=True, labels={'CATEGORIA_DESPESA': 'Categoria de Despesa', 'CONTAGEM': 'Contagem de Imóveis'})
+        corr_fig = px.box(df_agrupado,valorY,color=coluna,orientation='h')
+        pie_fig = px.pie(
+        df_agrupado,
+        names=coluna,# Diferenciar entre "Sim" e "Não" para ANIMAL
+        values='CONTAGEM',  # Usar a contagem de imóveis para as fatias
+        color=coluna, # Diferenciar as fatias por "ANIMAL" (Sim ou Não)
+        #title='Relação entre Categoria de Despesa Total e Presença de Animais',
+        #labels={'ANIMAL': 'Presença de Animais', 'CONTAGEM': 'Contagem de Imóveis'},
+        #facet_col='CATEGORIA_DESPESA'  # Adiciona as categorias de despesa como facetas separadas
+        )
+        pie_fig.update_layout()
+        
+        # Adicionar o gráfico de barras
+        for trace in bar_fig['data']:
+            sub_fig.add_trace(trace, row=1, col=1)
+
+        # Adicionar o gráfico de dispersão
+        for trace in line_fig['data']:
+            sub_fig.add_trace(trace, row=2, col=1)
+
+        # Adicionar o gráfico de dispersão
+        for trace in corr_fig['data']:
+            sub_fig.add_trace(trace, row=3, col=1)
+
+        # Adicionar o gráfico de dispersão
+        for trace in pie_fig['data']:
+            sub_fig.add_trace(trace, row=4, col=1)
+
+        # Ajustar a largura do gráfico de pizza no subplot
+        sub_fig.update_traces(domain=dict(x=[0, 1]), row=4, col=1)
+
+        # Atualizar layout
+        sub_fig.update_layout(height=500, width=1000, title_text="Subplots com Plotly Express Qualitativa")
+
+        # Mostrar o gráfico
+        #sub_fig.show()
+
+    elif coluna in coluna_quantitativa:
+        df_intermediate['CATEGORIA_DESPESA'] = pd.cut(df_intermediate['DESPESA_TOTAL'], bins=frequencia, labels=[f'{frequencia[i]} - {frequencia[i+1]}' for i in range(len(frequencia)-1)])
+        df_agrupado = df_intermediate.groupby('CATEGORIA_DESPESA', observed=False)[coluna].mean().reset_index()
+        valorX = df_agrupado.CATEGORIA_DESPESA
+        valorY = df_agrupado[coluna]
+
+        print(f'A coluna {coluna} é quantitativa.')
+
+        # Criar os subplots - Exemplo com 1 linha e 2 colunas
+        #sub_fig = make_subplots(rows=4, cols=1)
+        sub_fig = make_subplots(rows=4, cols=1, specs=[[{'type': 'xy'}], [{'type': 'xy'}], [{'type': 'xy'}], [{'type': 'domain'}]])
+
+        bar_fig = px.bar(
+        x= valorX,
+        y= valorY,
+        title='Relação entre Categoria de Área e Despesa Total',
+        labels={'CATEGORIA_AREA': 'Intervalo de Área (m²)', 'DESPESA_TOTAL': 'Despesa Total Média (R$)'},
+        text_auto=True  # Exibe os valores nas barras
+        )
+        line_fig = px.line(
+        x= valorX,
+        y= valorY,
+        title='Relação entre Categoria de Área e Despesa Total',
+        labels={'CATEGORIA_AREA': 'Intervalo de Área (m²)', 'DESPESA_TOTAL': 'Despesa Total Média (R$)'},
+        #text_auto=True  # Exibe os valores nas barras
+        )
+        pie_fig = px.pie(
+        df_agrupado,
+        names = valorX,
+        values = valorY
+        )
+        corr_fig = px.box(valorY,orientation='h')
+        # Atualizar o layout do gráfico para esconder o eixo X
+
+        # Adicionar o gráfico de barras
+        for trace in bar_fig['data']:
+            sub_fig.add_trace(trace, row=1, col=1)
+
+        # Adicionar o gráfico de dispersão
+        for trace in line_fig['data']:
+            sub_fig.add_trace(trace, row=2, col=1)
+
+        # Adicionar o gráfico de dispersão
+        for trace in corr_fig['data']:
+            sub_fig.add_trace(trace, row=3, col=1)
+
+        # Adicionar o gráfico de dispersão
+        for trace in pie_fig['data']:
+            sub_fig.add_trace(trace, row=4, col=1)
+
+        # Atualizar layout
+        sub_fig.update_layout(height=700, width=1000, 
+                               margin=dict(l=0, r=0),title_text="Subplots com Plotly Express Quantitativa")
+
+        # Mostrar o gráfico
+        #sub_fig.show()
+
+    else:
+        print(f'A coluna {coluna} não foi encontrada nas listas.')
+
+
+
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    return hist_fig, map_fig,sub_fig
 
 # Início do Calbacks =========================================
 
