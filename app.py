@@ -209,7 +209,8 @@ def update_hist(local, square_size, color_map):
         sub_fig.update_traces(domain=dict(x=[0, 1]), row=4, col=1)
 
         # Atualizar layout
-        sub_fig.update_layout(height=500, width=1000, title_text="Subplots com Plotly Express Qualitativa")
+        sub_fig.update_layout(height=700, width=1000,  margin=dict(l=0, r=0),
+                              title_text="Subplots com Plotly Express Qualitativa")
 
         # Mostrar o gráfico
         #sub_fig.show()
@@ -265,8 +266,8 @@ def update_hist(local, square_size, color_map):
             sub_fig.add_trace(trace, row=4, col=1)
 
         # Atualizar layout
-        sub_fig.update_layout(height=700, width=1000, 
-                               margin=dict(l=0, r=0),title_text="Subplots com Plotly Express Quantitativa")
+        sub_fig.update_layout(height=700, width=1000,  margin=dict(l=0, r=0),
+                              title_text="Subplots com Plotly Express Quantitativa")
 
         # Mostrar o gráfico
         #sub_fig.show()
