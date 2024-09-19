@@ -53,11 +53,12 @@ controllers = dbc.Row([
     html.Div(style={"margin-top": "10px"}),    
     html.Img(id="logo", src=app.get_asset_url(
         "logo_ufma.png"), style={"width": "100%"}),
-    html.H2("ATIVIDADE 16", style={"margin-top": "30px;font-weight: bold"}),        
+    html.H4("|", style={"margin-top": "10px","color": "white"}),        
     html.H3("DASHBOARD Brazilian Houses to Rent", style={"margin": "0px;font-weight: bold"}),
     html.P('''1.Disciplina: Visualização de Dados ADIA ''', style={"margin": "0px"}),
     html.P('''2.Professor: Dr.Paulo Rogério de A. Ribeiro  ''', style={"margin": "0px"}),
     html.P('''3.Tutor: Prof. Daniel Duarte Co''', style={"margin": "0px"}),
+    html.P('''4.Aluno: Samuel G Alves''', style={"margin": "0px"}),
     html.H4("DESPESA_TOTAL(R$):", style={"margin-top": "20px", "margin-bottom": "10px"}),
     dcc.Slider(
         min=0, max=4,
@@ -95,7 +96,7 @@ app.layout = dbc.Container(
                 dbc.Col([controllers], md=3),
                 dbc.Col([
                     dbc.Row([
-                        html.H4("Georeferência da Imobiliária BRAZILIAN HOUSES x Aluguéis", style={"margin-top": "20px", "margin-left": "50px","color": "#6B1527","font-size": "30px",}),
+                        html.H4("IMOBILIÁRIA BRAZILIAN HOUSES X ALUGÉIS", style={"margin-top": "20px", "margin-left": "50px","color": "#6B1527","font-size": "30px",}),
                     ]),
                     dbc.Row([dbc.Col([map],md=12),
                     ],),
@@ -209,8 +210,7 @@ def update_hist(local, square_size, color_map):
         sub_fig.update_traces(domain=dict(x=[0, 1]), row=4, col=1)
 
         # Atualizar layout
-        sub_fig.update_layout(height=700, width=1000,  margin=dict(l=0, r=0),
-                              title_text="Subplots com Plotly Express Qualitativa")
+        sub_fig.update_layout(height=700, width=1000,  margin=dict(l=0, r=0), title_text="Subplots com Plotly Express Qualitativa")
 
         # Mostrar o gráfico
         #sub_fig.show()
@@ -266,8 +266,7 @@ def update_hist(local, square_size, color_map):
             sub_fig.add_trace(trace, row=4, col=1)
 
         # Atualizar layout
-        sub_fig.update_layout(height=700, width=1000,  margin=dict(l=0, r=0),
-                              title_text="Subplots com Plotly Express Quantitativa")
+        sub_fig.update_layout(height=700, width=1000,  margin=dict(l=0, r=0),title_text="Subplots com Plotly Express Quantitativa")
 
         # Mostrar o gráfico
         #sub_fig.show()
