@@ -25,7 +25,7 @@ blockquote {
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
   display: inline-block;
   height: 38px;
-  color: #555;
+  color: #6B1527;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
@@ -36,7 +36,7 @@ blockquote {
   white-space: nowrap;
   background-color: transparent;
   border-radius: 4px;
-  border: 1px solid #dbdbdb44;
+  border: 1px solid #6B1527;
   cursor: pointer;
   box-sizing: border-box;
 }
@@ -45,27 +45,38 @@ blockquote {
 button{
   margin-left: 10px;
 }
-
+.rc-slider-dot-active{
+  border-color:  #6B1527;
+}
+.rc-slider-handle{
+  border-color:  #6B1527;
+}
+.rc-slider-step{
+  border-color:  #6B1527;
+}
+.rc-slider-step{
+  border-color:  #6B1527;
+}
 .card{
   margin-top: 10px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 2px 2px 0 #6B1527, 0 2px 2px 0 #6B1527;
   color: #FFFFFF; 
 }
 
 .button.button-primary, button.button-primary, input[type="submit"].button-primary, input[type="reset"].button-primary, input[type="button"].button-primary {
   color: #FFF;
-  background-color: #33C3F0;
-  border-color: #33C3F0;
+  background-color: #6B1527;
+  border-color: #6B1527;
 }
 .button.button-primary:hover, button.button-primary:hover, input[type="submit"].button-primary:hover, input[type="reset"].button-primary:hover, input[type="button"].button-primary:hover, .button.button-primary:focus, button.button-primary:focus, input[type="submit"].button-primary:focus, input[type="reset"].button-primary:focus, input[type="button"].button-primary:focus {
   color: #FFF;
-  background-color: #1EAEDB;
-  border-color: #1EAEDB;
+  background-color: #6B1527;
+  border-color: #6B1527;
 }
 
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, 
 .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
-  color: #cccccc;
+  color:#6B1527;
 }
 
 /* Forms –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -94,10 +105,11 @@ input[type="email"], input[type="number"], input[type="search"], input[type="tex
 
 
 .Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
-  background-color: #1E1E1E;
-  color: white;
+  background-color:  white;
+  color:#6B1527;
+  border: 1px solid #6B1527;
 }
 
 .Select-control{
-  border: 0.5px solid #dbdbdb44;
+  border: 0.5px solid #6B1527;
 }
