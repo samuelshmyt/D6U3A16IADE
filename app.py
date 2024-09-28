@@ -92,6 +92,7 @@ controllers = dbc.Row([
 
 ])
 
+
 # FIM CONTROLLER =======================================
 # Início do Layout =========================================
 
@@ -108,61 +109,67 @@ app.layout = dbc.Container([
         dbc.Row([
                 dbc.Col([controllers], md=3),
                 dbc.Col([
-                    dbc.Row([
-                    # lucro bruto 
-                        dbc.CardGroup([
-                        dbc.Card(
-                            html.Div(className="material-icons", children="point_of_sale", style={'fontSize': '48px', 'color': 'white','padding': '22px 12px'}),
-                            color='warning',
-                            style={'maxWidth':75,'height':100,'margin-left':'10px'} 
-                        ),
-                        dbc.Card([
-                            html.Legend("LUCRO BRUTO:"),
-                            html.H5(["R$"],id="p-bruto-dashboard",style={"font-size": "20px"}),
-                        ],style={'padding-left':'10px','padding-top':'10px', "color":"#6B1527",}
-                        ),
-                    ], style={'maxWidth':'30%','height':100,'margin':'1%'} ),
-            
-                    # Despesa 
-                    dbc.CardGroup([
-                        dbc.Card(
-                            html.Div(className="material-icons", children="sell", style={'fontSize': '48px', 'color': 'white','padding': '22px 12px'}),
-                            color='danger',
-                            style={'maxWidth':75,'height':100,'margin-left':'10px'} 
-                        ),
-                        dbc.Card([
-                            html.Legend("DESPESAS:"),
-                            html.H5(["R$"],id="p-despesa-dashboard",style={"font-size": "20px"}),
-                        ],style={'padding-left':'10px','padding-top':'10px', "color":"#6B1527",}),
-                    ],style={'maxWidth':'30%','height':100,'margin':'1%'}),
+                    dbc.Col([
+                        dbc.Row([
+                                # lucro bruto 
+                                    dbc.CardGroup([
+                                    dbc.Card(
+                                        html.Div(className="material-icons", children="point_of_sale", style={"font-size": "2vw", 'color': 'white','padding': '22px 12px'}),
+                                        color='warning',
+                                        style={'maxWidth':75,'maxheight':100,'margin-left':'10px','text-align': 'center',} 
+                                    ),
+                                    dbc.Card([
+                                        html.Legend("LUCRO BRUTO:",style={"font-size": "1vw",'font-weight': 'bold'}),
+                                        html.H5(["R$"],id="p-bruto-dashboard",style={"font-size": "1vw"}),
+                                    ],style={'padding-left':'10px','padding-top':'10px', "color":"#6B1527",}
+                                    ),
+                                ], style={'maxWidth':'30%','maxheight':100,'margin':'1%'} ),
 
-                    # Lucro Liquido
-                    dbc.CardGroup([
-                        dbc.Card(
-                            html.Div(className="material-icons", children="savings", style={'fontSize': '48px', 'color': 'white','padding': '22px 12px'}),
-                            color='success',
-                            style={'maxWidth':75,'height':100,'margin-left':'10px','color':'white'} 
-                        ),
-                        dbc.Card([
-                            html.Legend("LUCRO LIQUIDO:"),
-                            html.H5(["R$"],id="p-liquido-dashboard",style={"font-size": "20px"}),
-                        ],style={'padding-left':'10px','padding-top':'10px', "color":"#6B1527",}),
-                        
-                    ],style={'maxWidth':'30%','height':100,'margin':'1%'}),
-                ]),
+                                # Despesa 
+                                dbc.CardGroup([
+                                    dbc.Card(
+                                        html.Div(className="material-icons", children="sell", style={"font-size": "2vw", 'color': 'white','padding': '22px 12px'}),
+                                        color='danger',
+                                        style={'maxWidth':75,'maxheight':100,'margin-left':'10px','text-align': 'center',} 
+                                    ),
+                                    dbc.Card([
+                                        html.Legend("DESPESAS:",style={"font-size": "1vw",'font-weight': 'bold'}),
+                                        html.H5(["R$"],id="p-despesa-dashboard",style={"font-size": "1vw"}),
+                                    ],style={'padding-left':'10px','padding-top':'10px', "color":"#6B1527",}),
+                                ],style={'maxWidth':'30%','maxheight':100,'margin':'1%'}),
 
-                html.Hr(style={"margin-top": "22px", "color":"#6B1527"}),                
-                dbc.Row([html.H4("IMOBILIÁRIA BRAZILIAN HOUSES & ALUGÉIS", style={"margin-top": "20px", "margin-left": "50px","color": "#6B1527","font-size": "30px",}),]),
-                dbc.Row([html.H4("- Dados de casas para alugar (2020)", style={"margin-top": "10px", "margin-left": "50px","color": "#6B1527","font-size": "20px",}),]),
-                dbc.Row([dbc.Col([map],md=12),],),
-                html.Hr(style={"color":"#6B1527"}),                       
-                dbc.Row([dbc.Col([quant],md=12),],),
-                html.Hr(style={"color":"#6B1527"}),                     
-                dbc.Row([dbc.Col([subb],md=12),],),
-                html.Br(),
-                html.Hr(style={"color":"#6B1527"}), 
+                                # Lucro Liquido
+                                dbc.CardGroup([
+                                    dbc.Card(
+                                        html.Div(className="material-icons", children="savings", style={"font-size": "2vw", 'color': 'white','padding': '22px 12px'}),
+                                        color='success',
+                                        style={'maxWidth':75,'maxheight':100,'margin-left':'10px','color':'white','text-align': 'center',} 
+                                    ),
+                                    dbc.Card([
+                                        html.Legend("LUCRO LIQUIDO:",style={"font-size": "1vw",'font-weight': 'bold'}),
+                                        html.H5(["R$"],id="p-liquido-dashboard",style={"font-size": "1vw"}),
+                                    ],style={'padding-left':'10px','padding-top':'10px', "color":"#6B1527",}),
+                                    
+                                ],style={'maxWidth':'30%','maxheight':100,'margin':'1%'}),
+                                html.Hr(style={"margin-top": "22px", "color":"#6B1527"}),
+                            ]),
+                    ], md=12, style={"margin-bottom": "10px" }), 
+                    dbc.Col([
+                        dbc.Col([                
+                                dbc.Row([html.H4("IMOBILIÁRIA BRAZILIAN HOUSES & ALUGÉIS", style={"margin-top": "20px", "margin-left": "50px","color": "#6B1527","font-size": "30px",}),]),
+                                dbc.Row([html.H4("- Dados de casas para alugar (2020)", style={"margin-top": "10px", "margin-left": "50px","color": "#6B1527","font-size": "20px",}),]),
+                                dbc.Row([dbc.Col([map],md=12),],),
+                                html.Hr(style={"color":"#6B1527"}),                       
+                                dbc.Row([dbc.Col([quant],md=12),],),
+                                html.Hr(style={"color":"#6B1527"}),                     
+                                dbc.Row([dbc.Col([subb],md=12),],),
+                                html.Br(),
+                                html.Hr(style={"color":"#6B1527"}), 
+                        ]),
+                    ], md=12),   
+                ], md=9),
 
-            ])                
+                                
          ])
     ], fluid=True, )
 
