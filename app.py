@@ -9,11 +9,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from _map import *
-from _subgraf import *
-from _quant import *
-
-
 # INICIAR SERVIDORWEB ======================================================
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 server = app.server
@@ -59,6 +54,18 @@ lista_menu = {
     'SEGURO': 'SEGURO',
     'DESPESA_TOTAL':'DESPESA_TOTAL'
 }
+# FIGURAS
+fig_map = go.Figure()
+fig_map.update_layout(template="plotly", paper_bgcolor="rgba(0,0,0,0)")
+map = dbc.Row([dcc.Graph(id="map-graph", figure=fig_map)], style={"height": "60vh"})
+
+fig_quant = go.Figure()
+fig_quant.update_layout(template="plotly", paper_bgcolor="rgba(0,0,0,0)")
+quant = dbc.Row([dcc.Graph(id="quant-graph", figure=fig_quant)], style={"height": "50vh"})
+
+fig_subb = go.Figure()
+fig_subb.update_layout(template="plotly", paper_bgcolor="rgba(0,0,0,0)")
+subb = dbc.Row([dcc.Graph(id="sub-graph", figure=fig_subb)], style={"height": "140vh"})
 
 # PARTE CONTROLE DO SITE
 controllers = dbc.Row([
@@ -603,5 +610,5 @@ def update_hist(local, square_size, color_map):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
     # app.run_server(host="0.0.0.0", port=8050)
